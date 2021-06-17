@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //set public folder as static folder for static files
-app.use('/assets', express.static(__dirname + '/public'));
+app.use('/css',express.static(path.resolve(__dirname,"public/css")))
 
 //route for homepage
 app.get('/', (req, res) => {
