@@ -6,20 +6,17 @@ const app = express();
 const port = 4200;
 const mongoose = require('mongoose');
 
-const databaseName = 'contactWhatsApp'
+const databaseName = 'whatsDatabase'
 
 const url = `mongodb://localhost:27017/${databaseName}`;
 
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-
-
-
-const dbo = mongoose.connection;
-dbo.on('error', console.error.bind(console, 'connection error:'));
-dbo.once('open', function () {
-    console.log("We are connected")
-    // we're connected!
+//Connection to mongodb
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(error) {
+    if (error) {
+        console.log("Error!" + error);
+    }
 });
+
 
 //Schema defined
 const contactSchema = new mongoose.Schema({
@@ -44,8 +41,7 @@ app.use('/assets', express.static(__dirname + '/public'));
 
 //route for homepage
 app.get('/', (req, res) => {
-    var mysort = { name: 1 };
-    dbo.collection("Contact").find().sort(mysort).toArray(function (err, result) {
+    Contact.find(function (err, result) {
         if (err) throw err;
         res.render("contactViews", { results: result })
     });
@@ -56,8 +52,12 @@ app.get('/contactadd', (req, res) => {
 });
 
 app.post('/savecontact', (req, res) => {
-    let data = { contactId: req.body.id, contactName: req.body.name, contactNumber: req.body.number };
-    dbo.collection("Contact").insertOne(data, function (err, res) {
+    var data = new Contact();
+    data.contactId = req.body.id;
+    data.contactName = req.body.name;
+    data.contactNumber = req.body.number;
+
+    data.save(function (err, res) {
         if (err) throw err;
         console.log("1 record inserted");
     });
@@ -67,8 +67,7 @@ app.post('/savecontact', (req, res) => {
 app.get('/contactdelete/:id', (req, res) => {
     const id = req.params.id;
     console.log(id);
-    var myquery = { contactId: id }
-    dbo.collection("Contact").deleteOne(myquery, function (err, result) {
+    Contact.remove({contactId:id}, function (err, result) {
         if (err) throw err;
         console.log("1 document deleted");
     });
@@ -78,8 +77,7 @@ app.get('/contactdelete/:id', (req, res) => {
 app.get('/contactedit/:id', (req, res) => {
     const id = req.params.id;
     console.log(id);
-    var obj = { "contactId": id };
-    dbo.collection("Contact").findOne(obj, function (err, result) {
+        Contact.findOne({contactId:id}, function (err, result) {
         if (err) throw err;
         console.log(result.contactId);
         res.render('contactEdit', {
@@ -88,11 +86,9 @@ app.get('/contactedit/:id', (req, res) => {
     });
 });
 
+
 app.post('/updatecontact', (req, res) => {
-    let data = { contactId: req.body.id, contactName: req.body.name, contactNumber: req.body.number };
-    var myquery = { contactId: req.body.id };
-    var newvalues = { $set: { contactName: req.body.name, contactNumber: req.body.number } };
-    dbo.collection("Contact").updateOne(myquery, newvalues, function (err, res) {
+   Contact.updateMany({contactId:req.body.id},{contactName:req.body.name},{contactNumber:req.body.number}, function (err, res) {
         if (err) throw err;
         console.log("1 document updated");
     });
