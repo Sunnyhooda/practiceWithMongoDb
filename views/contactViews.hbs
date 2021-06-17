@@ -1,0 +1,64 @@
+<style>
+
+   table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+
+</style>
+<center>
+
+<a href="http://localhost:4200/contactadd">Add New Contact</a>
+
+<hr>
+<hr>
+
+<table>
+
+    <thread>
+        <tr>
+            <th>
+                Contact ID
+            </th>
+            <th>
+                Contact Name
+            </th>
+            <th>
+                Contact Number
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thread>
+
+    <tbody>
+
+        {{#each results}}
+        <tr>
+            <td>
+                {{contactId}}
+            </td>
+            <td>
+                {{contactName}}
+            </td>
+            <td>
+                {{contactNumber}}
+            </td>
+            <td>
+                <a href ="http://localhost:4200/contactdelete/{{contactId}}">  Delete</a>
+                <a href ="http://localhost:4200/contactedit/{{contactId}}">   Edit</a>
+            </td>
+        </tr>
+
+{{/each}}
+
+    </tbody>
+
+</table>
+
+</center>

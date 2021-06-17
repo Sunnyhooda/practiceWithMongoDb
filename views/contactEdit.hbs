@@ -1,0 +1,40 @@
+<center>
+
+<form action="/updatecontact" method="POST">
+
+<table>
+
+    <tr>
+    <td>
+    <label> Contact Id: </label>
+    </td>
+    <td> 
+    <input type="text" name="id"  value="{{results.contactId}}" />
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    <label> Contact Name: </label>
+    </td>
+    <td> 
+    <input type="text" name="name" value={{results.contactName}}>
+    </td>
+    </tr>
+
+    <tr>
+       <td>
+    <label> Contact Number: </label>
+    </td>
+    <td>
+    <input type="text" name="number" value={{results.contactNumber}}>
+   </td>
+    </tr>
+
+       </table>
+
+    <input type="submit" value="submit">
+
+</form>
+
+</center>
